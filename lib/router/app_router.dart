@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../presentation/screens/product_list_screen.dart';
-import '../presentation/screens/product_detail_screen.dart';
+import '../presentation/screens/product_detail/product_detail_screen.dart';
 
 /// Application router configuration using go_router
 final GoRouter appRouter = GoRouter(
