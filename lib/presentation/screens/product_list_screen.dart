@@ -48,8 +48,13 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     final filteredProductsAsync = ref.watch(filteredProductsProvider);
     final colors = context.colors;
 
+    // Check if we should block scrolling (empty results)
+    final products = filteredProductsAsync.valueOrNull;
+    final hasNoResults = products != null && products.isEmpty;
+
     return Scaffold(
       body: NestedScrollView(
+        physics: hasNoResults ? const NeverScrollableScrollPhysics() : null,
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -59,11 +64,15 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
               scrolledUnderElevation: 0,
               backgroundColor: colors.background.withValues(alpha: 0.9),
               surfaceTintColor: Colors.transparent,
+              pinned: _showSearch,
               floating: true,
-              snap: true,
+              snap: !_showSearch,
               actions: [
                 IconButton(
-                  icon: Icon(_showSearch ? Icons.close : Icons.search, color: colors.textPrimary),
+                  icon: Icon(
+                    _showSearch ? Icons.close : Icons.search,
+                    color: colors.textPrimary,
+                  ),
                   onPressed: _toggleSearch,
                 ),
               ],
@@ -77,7 +86,12 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                 decoration: BoxDecoration(
                   color: colors.background,
                   border: Border(
-                    bottom: BorderSide(color: _showSearch ? colors.borderSubtle : Colors.transparent, width: 1),
+                    bottom: BorderSide(
+                      color: _showSearch
+                          ? colors.borderSubtle
+                          : Colors.transparent,
+                      width: 1,
+                    ),
                   ),
                 ),
                 child: _showSearch
@@ -89,24 +103,40 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                     : const SizedBox.shrink(),
               ),
             ),
-            SliverToBoxAdapter(child: Container(height: 1, color: colors.borderSubtle)),
+            SliverToBoxAdapter(
+              child: Container(height: 1, color: colors.borderSubtle),
+            ),
           ];
         },
         body: filteredProductsAsync.when(
           loading: () => const ProductSkeleton(),
-          error: (error, stack) =>
-              ErrorMessage(message: error.toString(), onRetry: () => ref.invalidate(productsProvider)),
+          error: (error, stack) => ErrorMessage(
+            message: error.toString(),
+            onRetry: () => ref.invalidate(productsProvider),
+          ),
           data: (products) {
             if (products.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.only(top: AppTheme.spacingMedium),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    ref.watch(searchQueryProvider).isNotEmpty ? 'No products match your search' : 'No products found',
-                    style: TextStyle(color: colors.textSecondary),
+              return CustomScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: AppTheme.spacingMedium,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          ref.watch(searchQueryProvider).isNotEmpty
+                              ? 'No products match your search'
+                              : 'No products found',
+                          style: TextStyle(color: colors.textSecondary),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               );
             }
 
