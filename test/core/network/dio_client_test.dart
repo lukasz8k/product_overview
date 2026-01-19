@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:product_overview/core/constants/app_constants.dart';
 import 'package:product_overview/core/network/dio_client.dart';
-import 'package:product_overview/core/network/retry_interceptor.dart';
 
 void main() {
   test('creates a singleton Dio instance', () {
@@ -26,13 +25,9 @@ void main() {
   test('registers retry interceptor and log interceptor when debugging', () {
     final dio = DioClient.instance;
 
-    expect(
-      dio.interceptors.any((interceptor) => interceptor is RetryInterceptor),
-      isTrue,
-    );
+    expect(dio.interceptors.any((interceptor) => interceptor is RetryInterceptor), isTrue);
 
-    final hasLogInterceptor =
-        dio.interceptors.any((interceptor) => interceptor is LogInterceptor);
+    final hasLogInterceptor = dio.interceptors.any((interceptor) => interceptor is LogInterceptor);
     expect(hasLogInterceptor, kDebugMode);
   });
 }
