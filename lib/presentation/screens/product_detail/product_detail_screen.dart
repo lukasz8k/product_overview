@@ -57,33 +57,40 @@ class ProductDetailScreen extends ConsumerWidget {
     );
   }
 
+  static const double _maxContentWidth = 960.0;
+
   SliverToBoxAdapter _buildDesktopLayout(
     BuildContext context,
     dynamic product,
   ) {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.all(AppTheme.spacingLarge),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ProductImageContainer(
-                imageUrl: product.image,
-                height: 500,
-              ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+          child: Padding(
+            padding: const EdgeInsets.all(AppTheme.spacingLarge),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ProductImageContainer(
+                    imageUrl: product.image,
+                    height: 500,
+                  ),
+                ),
+                const SizedBox(width: AppTheme.spacingLarge),
+                Expanded(
+                  child: ProductInfo(
+                    title: product.title,
+                    price: product.price,
+                    description: product.description,
+                    rating: product.rating.rate,
+                    ratingCount: product.rating.count,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: AppTheme.spacingLarge),
-            Expanded(
-              child: ProductInfo(
-                title: product.title,
-                price: product.price,
-                description: product.description,
-                rating: product.rating.rate,
-                ratingCount: product.rating.count,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -136,15 +143,20 @@ class ProductDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildDesktopSkeletonLayout() {
-    return Padding(
-      padding: const EdgeInsets.all(AppTheme.spacingLarge),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Expanded(child: ProductImageSkeleton(height: 500)),
-          const SizedBox(width: AppTheme.spacingLarge),
-          const Expanded(child: ProductInfoSkeleton()),
-        ],
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+        child: Padding(
+          padding: const EdgeInsets.all(AppTheme.spacingLarge),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Expanded(child: ProductImageSkeleton(height: 500)),
+              SizedBox(width: AppTheme.spacingLarge),
+              Expanded(child: ProductInfoSkeleton()),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -36,7 +36,7 @@ class ProductInfo extends StatelessWidget {
         ),
         const SizedBox(height: AppTheme.spacingMedium),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -47,6 +47,7 @@ class ProductInfo extends StatelessWidget {
                 color: colors.priceAccent,
               ),
             ),
+            const SizedBox(width: 16),
             _RatingBadge(rating: rating, ratingCount: ratingCount),
           ],
         ),
