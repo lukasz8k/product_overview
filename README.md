@@ -9,21 +9,37 @@ Flutter Web application displaying products from FakeStore API.
 
 ## Quick Start
 
-```bash
 Flutter (Channel stable, 3.35.5)
+
+```bash
 # Install dependencies
 flutter pub get
 dart run build_runner build
-
-# Run on Chrome
-flutter run -d chrome
-
-# Build for production
-flutter build web --release
 ```
 
-## Architecture
+### Run on Different Platforms
 
+```bash
+# Web (Chrome)
+flutter run -d chrome
+
+# macOS
+flutter run -d macos
+
+# Windows
+flutter run -d windows
+
+# iOS Simulator
+flutter run -d ios
+
+# Android Emulator/Device
+flutter run -d android
+```
+
+> **Note:** macOS requires network entitlements (already configured). Android requires INTERNET permission (already configured).
+
+## Architecture
+z
 **Layer-based structure** with separation of concerns:
 
 ```
